@@ -6,11 +6,15 @@ import com.login.LoginWebServices.models.User;
 import com.login.LoginWebServices.services.RegistrationService;
 import com.login.LoginWebServices.utils.ImageUploadHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.nio.file.Paths;
 
 @RestController
 public class RegistrationController {
@@ -34,7 +38,7 @@ public class RegistrationController {
     //@PostMapping("/registeruser")
     //@PostMapping(path = "/registeruser", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE })
     @PostMapping(path = "/registerwithimage")
-    public ResponseEntity<User> registerUser(@RequestParam("userinfo") String userString, @RequestParam("image") MultipartFile image) throws Exception {
+    public ResponseEntity<User> registerUser( @RequestParam("image") MultipartFile image, @RequestParam("userinfo") String userString) throws Exception {
         Gson gson = new Gson();
 
         // Converting json to object
@@ -66,13 +70,14 @@ public class RegistrationController {
 //    }
 
     @PostMapping("/imageupload")
-    public ResponseEntity<FileInfo> userProfileImageUpload(@RequestParam("image") MultipartFile userImage){
+    public ResponseEntity<FileInfo> userProfileImageUpload(@RequestParam("file") MultipartFile userImage) throws Exception{
         // file/image validations
         //file empty
         if (userImage.isEmpty()){
             return new ResponseEntity<>( HttpStatus.NOT_FOUND);
         }
         //imageUploadHelper.uploadFile(userImage);
+
 
         FileInfo fileInfo= new FileInfo();
         fileInfo.setFilename(userImage.getOriginalFilename());
